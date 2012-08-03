@@ -1,0 +1,22 @@
+{
+    "name": "bootstrap-amd",
+    "version": "0.0.2",
+    "homepage": "http://github.com/clexit/bootstrap-amd",
+    "author": "Vyacheslav Kotiya <clexit@clexit.com> (http://github.com/clexit)",
+    "description": "Converts Twitter Bootstrap JS files into AMD",
+    "licenses": [
+        {
+            "type": "BSD"
+        },
+        {
+            "type": "MIT"
+        }
+    ],
+    "main": "bootstrap-amd",
+    "bin": {
+        "bootstrap-amd": "./bootstrap-amd.js"
+    },
+    "engines": {
+        "node": ">=0.6.0"
+    }
+}
