@@ -26,7 +26,7 @@ bootstrap-amd sets `Transitions` module as a dependancy for all modules. If you 
 You can configure the location just like you configure [jqueryui-amd](https://github.com/jrburke/jqueryui-amd#configuring-amd-loading) to reference the modules with a `bootstrap` prefix:
 
 ```javascript
-define([ 'bootstrap/alert', 'bootstrap/dropdown' ], function( $ ) {
+define([ 'bootstrap/alert', 'bootstrap/dropdown' ], function() {
     //some code
 });
 ```
