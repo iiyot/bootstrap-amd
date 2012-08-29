@@ -31,6 +31,25 @@ define([ 'bootstrap/alert', 'bootstrap/dropdown' ], function() {
 });
 ```
 
+It's also possible (and probably a good idea) to load all plugins at once. `bootstrap-amd` creates a file with all modules (`bootstrap.js`) in the `bootstrap` directory. 
+
+Create a config first:
+
+```javascript
+requirejs.config({
+    paths: {
+        bootstrap: 'path/to/bootstrap/bootstrap'
+    }
+});
+```
+...and then just include it as a dependancy:
+
+```javascript
+define([ 'bootstrap' ], function() {
+    //some code
+});
+```
+
 ## What happens
 
 The script works with Twitter Bootstrap source directory cloned from [github](https://github.com/twitter/bootstrap/). It doesn't clone the Bootstrap, it just expects a path to this directory as a first argument.

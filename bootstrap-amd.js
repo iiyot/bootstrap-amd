@@ -18,13 +18,67 @@ var fs = require( 'fs' ),
     jsFileRegExp = /\.js$/,
     exists = fs.existsSync || path.existsSync,
     bootstrapSrcDir,
-    bootstrapPaths;
+    bootstrapPaths,
+    allPlugins = [];
 
+
+//Make sure required fields are present.
+if ( !inDir ) {
+    console.log( 'Usage: bootstrap-amd inputDir' );
+    process.exit( 1 );
+};
+
+//Normalize directory
+inDir = path.normalize( inDir );
+if ( inDir.lastIndexOf( '/' ) !== inDir.length - 1 ) {
+    inDir += '/';
+};
+
+//Make sure there is a js directory in there, otherwise cannot
+//convert correctly.
+bootstrapSrcDir = path.join( inDir, 'js/' );
+
+if ( !exists(bootstrapSrcDir) || !fs.statSync(bootstrapSrcDir).isDirectory() ) {
+    console.log( 'The directory does not appear to contain Twitter Bootstrap, ' +
+                 'not converting any files. Looking for "js" directory ' +
+                 'in the source directory failed.' );
+    process.exit( 1 );
+};
+
+//For each file that is a sibling to bootstrap, transform to define.
+bootstrapPaths = fs.readdirSync( bootstrapSrcDir );
+bootstrapPaths.forEach(function( fileName ) {
+    var srcPath = bootstrapSrcDir + fileName;
+    if ( fs.statSync(srcPath).isFile() && jsFileRegExp.test(srcPath) ) {
+        var content = fs.readFileSync(srcPath, 'utf8');
+        allPlugins.push( content );
+        //console.log( "Converting file: " + srcPath );
+        convert( fileName, content );
+    };
+
+    createBootstrapAll();
+});
+
+console.log( 'Done. See ' + path.join(inDir, 'bootstrap') + ' for the AMD modules.' );
+
+
+
+/* functions */
 function mkDir(dir) {
     if ( !exists(dir) ) {
         //511 is decimal for 0777 octal
         fs.mkdirSync( dir, 511 );
     };
+};
+
+function createBootstrapAll() {
+    var content = allPlugins.join( '' ),
+        content = 'define(' +
+                  '[ \'jquery\' ], function ( jQuery ) {\n' +
+                   content +
+                   '\n});';
+
+    fs.writeFileSync( inDir + '/bootstrap/bootstrap.js', content );
 };
 
 /**
@@ -85,38 +139,3 @@ function getDependencies( fileName ) {
 
     return deps;
 };
-
-//Make sure required fields are present.
-if ( !inDir ) {
-    console.log( 'Usage: bootstrap-amd inputDir' );
-    process.exit( 1 );
-};
-
-//Normalize directory
-inDir = path.normalize( inDir );
-if ( inDir.lastIndexOf( '/' ) !== inDir.length - 1 ) {
-    inDir += '/';
-};
-
-//Make sure there is a js directory in there, otherwise cannot
-//convert correctly.
-bootstrapSrcDir = path.join( inDir, 'js/' );
-
-if ( !exists(bootstrapSrcDir) || !fs.statSync(bootstrapSrcDir).isDirectory() ) {
-    console.log( 'The directory does not appear to contain Twitter Bootstrap, ' +
-                 'not converting any files. Looking for "js" directory ' +
-                 'in the source directory failed.' );
-    process.exit( 1 );
-};
-
-//For each file that is a sibling to bootstrap, transform to define.
-bootstrapPaths = fs.readdirSync( bootstrapSrcDir );
-bootstrapPaths.forEach(function( fileName ) {
-    var srcPath = bootstrapSrcDir + fileName;
-    if ( fs.statSync(srcPath).isFile() && jsFileRegExp.test(srcPath) ) {
-        //console.log( "Converting file: " + srcPath );
-        convert( fileName, fs.readFileSync(srcPath, 'utf8') );
-    };
-});
-
-console.log( 'Done. See ' + path.join(inDir, 'bootstrap') + ' for the AMD modules.' );
