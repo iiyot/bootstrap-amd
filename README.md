@@ -23,29 +23,40 @@ bootstrap-amd sets `Transitions` module as a dependancy for all modules. If you 
 
 ##Configuring AMD loading
 
-You can configure the location just like you configure [jqueryui-amd](https://github.com/jrburke/jqueryui-amd#configuring-amd-loading) to reference the modules with a `bootstrap` prefix:
-
-```javascript
-define([ 'bootstrap/alert', 'bootstrap/dropdown' ], function() {
-    //some code
-});
-```
-
-It's also possible (and probably a good idea) to load all plugins at once. `bootstrap-amd` creates a file with all modules (`bootstrap.js`) in the `bootstrap` directory. 
-
 Create a config first:
 
 ```javascript
 requirejs.config({
     paths: {
-        bootstrap: 'path/to/bootstrap/bootstrap'
+        bootstrap: 'path/to/bootstrap/amd'
     }
 });
 ```
-...and then just include it as a dependancy:
+
+...and then just include bootstrap as a dependancy:
+
 
 ```javascript
 define([ 'bootstrap' ], function() {
+    //some code
+});
+```
+
+You can use single Bootstrap AMD modules but do it at your own peril. AMD modules are in `path/to/bootstrap/amd/src` directory. Configure the location just like you configure [jqueryui-amd](https://github.com/jrburke/jqueryui-amd#configuring-amd-loading):
+
+```javascript
+requirejs.config({
+    paths: {
+        bootstrap: 'path/to/bootstrap/amd/src'
+    }
+});
+```
+
+...and then reference the modules with a `bootstrap` prefix:
+
+
+```javascript
+define([ 'bootstrap/alert', 'bootstrap/dropdown' ], function() {
     //some code
 });
 ```
@@ -54,7 +65,7 @@ define([ 'bootstrap' ], function() {
 
 The script works with Twitter Bootstrap source directory cloned from [github](https://github.com/twitter/bootstrap/). It doesn't clone the Bootstrap, it just expects a path to this directory as a first argument.
 
-bootstrap-amd creates `bootstrap` folder with converted modules in the source directory.
+bootstrap-amd creates `amd` directory with `main.js` file that contains Twitter Bootstrap AMD and `amd/src` folder with converted modules.
 
 ## Constraints
 

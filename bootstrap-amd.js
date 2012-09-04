@@ -24,7 +24,8 @@ var fs = require( 'fs' ),
 
 //Make sure required fields are present.
 if ( !inDir ) {
-    console.log( 'Usage: bootstrap-amd inputDir' );
+    console.log( 'Usage: bootstrap-amd bootstrapSrcDir' );
+    console.log( 'git clone https://github.com/twitter/bootstrap.git' );
     process.exit( 1 );
 };
 
@@ -59,7 +60,7 @@ bootstrapPaths.forEach(function( fileName ) {
     createBootstrapAll();
 });
 
-console.log( 'Done. See ' + path.join(inDir, 'bootstrap') + ' for the AMD modules.' );
+console.log( 'Done. See \'' + path.join(inDir, 'amd') + '\' for the AMD version of the Bootstrap and \'' + path.join(inDir, 'amd/src') + '\' for AMD modules.' );
 
 
 
@@ -78,7 +79,7 @@ function createBootstrapAll() {
                    content +
                    '\n});';
 
-    fs.writeFileSync( inDir + '/bootstrap/bootstrap.js', content );
+    fs.writeFileSync( inDir + '/amd/main.js', content );
 };
 
 /**
@@ -102,9 +103,9 @@ function convert( fileName, contents ) {
 
     //Make sure directories exist in the bootstrap section.
     if ( moduleName !== 'bootstrap' && fileParts.length > 1 ) {
+        mkDir( inDir + 'amd/' );
         for ( i = 0; i < fileParts.length - 1; i++ ) {
-            segment = fileParts[ i ];
-            tempDir += segment + '/';
+            tempDir = inDir + 'amd/src/';
             mkDir( tempDir );
         };
     };
