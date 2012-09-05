@@ -79,7 +79,7 @@ function createBootstrapAll() {
                    content +
                    '\n});';
 
-    fs.writeFileSync( inDir + '/amd/main.js', content );
+    fs.writeFileSync( path.normalize(inDir + '/amd/main.js'), content );
 };
 
 /**
