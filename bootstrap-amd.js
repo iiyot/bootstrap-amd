@@ -19,6 +19,7 @@ var fs = require( 'fs' ),
     exists = fs.existsSync || path.existsSync,
     bootstrapSrcDir,
     bootstrapPaths,
+    popoverContent,
     allPlugins = [];
 
 
@@ -50,15 +51,27 @@ if ( !exists(bootstrapSrcDir) || !fs.statSync(bootstrapSrcDir).isDirectory() ) {
 bootstrapPaths = fs.readdirSync( bootstrapSrcDir );
 bootstrapPaths.forEach(function( fileName ) {
     var srcPath = bootstrapSrcDir + fileName;
+
     if ( fs.statSync(srcPath).isFile() && jsFileRegExp.test(srcPath) ) {
         var content = fs.readFileSync(srcPath, 'utf8');
-        allPlugins.push( content );
-        //console.log( "Converting file: " + srcPath );
-        convert( fileName, content );
-    };
 
-    createBootstrapAll();
+        convert( fileName, content );
+
+        // ignore popover because it has dependencies,
+        // thus it should be at the end of the file
+        if ( !/popover/.test( fileName ) ) {
+            allPlugins.push( content );
+        } else {
+            popoverContent = content;
+        };
+    };
 });
+
+// now we can add popover
+allPlugins.push( popoverContent );
+
+createBootstrapAll();
+createPackageJson();
 
 console.log( 'Done. See \'' + path.join(inDir, 'amd') + '\' for the AMD version of the Bootstrap and \'' + path.join(inDir, 'amd/src') + '\' for AMD modules.' );
 
@@ -80,6 +93,23 @@ function createBootstrapAll() {
                    '\n});';
 
     fs.writeFile( path.normalize(inDir + '/amd/main.js'), content );
+};
+
+function createPackageJson() {
+    var packageJson = fs.readFileSync( inDir + 'package.json', 'utf8' );
+
+    packageJson = JSON.parse( packageJson );
+
+    packageJson.description = 'AMD version of Twitter Bootstrap JavaScript modules. Converted with bootstrap-amd npm package.';
+    packageJson.keywords = [ 'bootstrap', 'twitter', 'modules', 'ready to use', 'modals', 'affix', 'tooltips', 'collapse', 'dropdowns', 'popovers', 'carousel', 'scrollspy', 'alert messages', 'typeahead', 'togglable tabs', 'buttons', 'transitions' ];
+    packageJson.dependencies = { 'jquery': '>1.5.0' };
+
+    delete packageJson.scripts;
+    delete packageJson.devDependencies;
+
+    packageJson = JSON.stringify( packageJson, null, '  ' );
+
+    fs.writeFile( path.normalize(inDir + '/amd/package.json'), packageJson );
 };
 
 /**

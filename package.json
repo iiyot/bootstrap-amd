@@ -1,6 +1,6 @@
 {
   "name": "bootstrap-amd",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "homepage": "http://github.com/clexit/bootstrap-amd",
   "author": "Vyacheslav Kotiya <clexit@clexit.com> (http://github.com/clexit)",
   "description": "Converts Twitter Bootstrap JS files into AMD modules",
