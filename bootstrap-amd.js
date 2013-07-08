@@ -55,14 +55,14 @@ bootstrapPaths.forEach(function( fileName ) {
     if ( fs.statSync(srcPath).isFile() && jsFileRegExp.test(srcPath) ) {
         var content = fs.readFileSync(srcPath, 'utf8');
 
-        convert( fileName, content );
+        convert( fileName, replacejQuery(content) );
 
         // ignore popover because it has dependencies,
         // thus it should be at the end of the file
         if ( !/popover/.test( fileName ) ) {
-            allPlugins.push( content );
+            allPlugins.push( replacejQuery(content) );
         } else {
-            popoverContent = content;
+            popoverContent = replacejQuery(content);
         };
     };
 });
@@ -85,6 +85,10 @@ function mkDir(dir) {
     };
 };
 
+function replacejQuery( content ) {
+    return content.replace( /window\.jQuery/gim, 'jQuery' );
+}
+
 function createBootstrapAll() {
     var content = allPlugins.join( '' ),
         content = 'define(' +
@@ -100,6 +104,7 @@ function createPackageJson() {
 
     packageJson = JSON.parse( packageJson );
 
+    packageJson.name = 'bootstrap-amd';
     packageJson.description = 'AMD version of Twitter Bootstrap JavaScript modules. Converted with bootstrap-amd npm package.';
     packageJson.keywords = [ 'bootstrap', 'twitter', 'modules', 'ready to use', 'modals', 'affix', 'tooltips', 'collapse', 'dropdowns', 'popovers', 'carousel', 'scrollspy', 'alert messages', 'typeahead', 'togglable tabs', 'buttons', 'transitions' ];
     packageJson.dependencies = { 'jquery': '>1.5.0' };
