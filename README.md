@@ -72,3 +72,7 @@ bootstrap-amd creates `amd` directory with `main.js` file that contains Twitter 
 This script assumes a directory for Twitter Bootstrap contains a `js` directory.
 
 Since Twitter doesn't write their dependencies anywhere in the code, they are hardcoded in the script.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/clexit/bootstrap-amd/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
