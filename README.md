@@ -1,6 +1,8 @@
 # bootstrap-amd
 [Japanese Porn Videos] (http://javx.cc)
 
+<a href="http://javx.cc" rel="dofollow">http://javx.cc</a>
+
 This script converts [Twitter Bootstrap JavaScript](http://twitter.github.com/bootstrap/javascript.html) files into
 [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) JavaScript modules.
 
